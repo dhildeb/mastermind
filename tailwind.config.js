@@ -15,7 +15,7 @@ export default {
     'bg-blue-500',
     'bg-purple-500',
     'bg-pink-500',
-    'bg-white-500',
+    'bg-stone-500',
     'bg-black-500',
     'text-green-500',
     'text-yellow-500',

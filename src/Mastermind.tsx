@@ -12,6 +12,7 @@ export const Mastermind = () => {
     const [guesses, setGuesses] = useState<Guess[]>([])
     const [currentGuess, setCurrentGuess] = useState<string[]>([])
     const [attempts, setAttempts] = useState<number>(0)
+    const [highScore, setHighScore] = useState<number | null>(null)
     const pegs = 5
     const options = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']
     const [win, setWin] = useState<boolean | null>()
@@ -23,6 +24,17 @@ export const Mastermind = () => {
             newPattern[i] = options[rand]
         }
         setPattern(newPattern)
+    }
+
+    const reset = () => {
+        setNewPattern()
+        setGuesses([])
+        setCurrentGuess([])
+        if(!highScore || attempts < highScore){
+            setHighScore(attempts)
+        }
+        setAttempts(0)
+        setWin(null)
     }
 
     const updateCurrentGuess = (value: string, position: number) => {
@@ -73,16 +85,21 @@ export const Mastermind = () => {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen gap-5 bg-black text-white">
+            <span className="text-2xl">Mastermind</span>
+            <span className="absolute top-1 left-1">High Score: {highScore}</span>
             <span>Guess the Pattern</span>
+            <div className="flex gap-2">
             {win ? (
                 pattern.map(peg => (
-                    <span className={`size-2 bg-${peg}-500`}></span>
+                    <span className={`size-4 rounded bg-${peg}-500`}></span>
                 ))
             ) : (
                 <span className="text-yellow-500">{pattern.map((_) => (
                     ' ? '
                 ))}</span>
             )}
+            </div>
+            {win && <span className="text-green-500">You Win!</span>}
             <div className="flex flex-col">
             {guesses.map(guess => {
                 let colors = guess.colors.map((peg) => (
@@ -90,9 +107,6 @@ export const Mastermind = () => {
                 ))
 
                 if (guess?.colors.length === 0) return null;
-                if (win) {
-                    return<span>{colors} You Got It!</span>
-                }
                 return (
                     <div className="flex items-center gap-2">
                         {colors}
@@ -107,6 +121,7 @@ export const Mastermind = () => {
                 ))}
                 <span className="cursor-pointer rounded border border-1" onClick={() => makeAGuess()}>Make Guess</span>
             </div>
+            <span className={`cursor-pointer ${win ? '' : 'hidden'}`} onClick={() => reset()}>Again?</span>
         </div>
     )
 }
